@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMM - Clasificador: Economía vs Informática</title>
+  <style>
+    :root {
+      --imm-blue: #0047ba;
+      --imm-blue-dark: #003082;
+      --imm-blue-light: #e8f0fe;
+      --imm-accent: #0066ff;
+      --bg-color: #f1f5f9;
+      --panel-bg: #ffffff;
+      --card-bg: #ffffff;
+      --eco-color: #0047ba;
+      --eco-bg: rgba(0, 71, 186, 0.06);
+      --it-color: #0284c7;
+      --it-bg: rgba(2, 132, 199, 0.06);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #cbd5e1;
+      --error-color: #ef4444;
+      --success-color: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Cabecera con Logo Institucional IMM */
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      background: var(--panel-bg);
+      padding: 20px 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .logo-imm {
+      height: 75px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: var(--imm-blue-dark);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    p.desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Barra de Estadísticas y Reinicio */
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1100px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      padding: 12px 24px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .score-badge {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--imm-blue-dark);
+    }
+
+    .score-badge span {
+      color: var(--imm-blue);
+      font-size: 1.3rem;
+    }
+
+    .btn-reset {
+      background: var(--imm-blue);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 71, 186, 0.3);
+    }
+
+    .btn-reset:hover {
+      background: var(--imm-blue-dark);
+      transform: translateY(-1px);
+    }
+
+    /* Zonas de Soltar (Drop Zones) */
+    .drop-zones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 1100px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .drop-zones {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .zone {
+      min-height: 300px;
+      background: var(--panel-bg);
+      border: 2px dashed var(--border-color);
+      border-radius: 16px;
+      padding: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-content: flex-start;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .zone h2 {
+      width: 100%;
+      font-size: 1.25rem;
+      text-align: center;
+      padding-bottom: 10px;
+      margin-bottom: 5px;
+      border-bottom: 2px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .zone-eco h2 { color: var(--eco-color); }
+    .zone-it h2 { color: var(--it-color); }
+
+    .zone-eco.drag-over {
+      border-color: var(--eco-color);
+      background: var(--eco-bg);
+      box-shadow: 0 0 15px rgba(0, 71, 186, 0.15);
+    }
+
+    .zone-it.drag-over {
+      border-color: var(--it-color);
+      background: var(--it-bg);
+      box-shadow: 0 0 15px rgba(2, 132, 199, 0.15);
+    }
+
+    /* Contenedor de Tarjetas */
+    .items-container {
+      width: 100%;
+      max-width: 1100px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      min-height: 160px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .item-card {
+      width: 120px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--imm-blue);
+      box-shadow: 0 6px 15px rgba(0, 71, 186, 0.15);
+    }
+
+    .item-card.selected {
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5) !important;
+      background: #fefce8;
+    }
+
+    .item-card img {
+      width: 100%;
+      height: 75px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      pointer-events: none;
+      background-color: #e2e8f0;
+    }
+
+    .item-card span {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: block;
+      line-height: 1.2;
+    }
+
+    .item-card.placed {
+      width: 100px;
+      padding: 6px;
+      cursor: default;
+      transform: none !important;
+      box-shadow: none;
+      border-color: #cbd5e1;
+    }
+
+    .item-card.placed img {
+      height: 55px;
+    }
+
+    .item-card.placed span {
+      font-size: 0.72rem;
+    }
+
+    .shake {
+      animation: shake 0.4s ease-in-out;
+      border-color: var(--error-color) !important;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.4) !important;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    #feedback {
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      min-height: 28px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <!-- Logo del Instituto Marie Manoogian -->
+      <img src="https://lh3.googleusercontent.com/d/1O53_Z5pLqZ5-rV8xZ4O5rN2bE_y7K_Z=" alt="Instituto Marie Manoogian" class="logo-imm" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x80/0047ba/ffffff?text=IMM+Marie+Manoogian'">
+    </div>
+    <h1>Instituto Marie Manoogian</h1>
+    <p class="desc">Clasificador Educativo: Arrastra o selecciona cada tarjeta en la categoría correcta</p>
+  </header>
+
+  <div class="controls-bar">
+    <div class="score-badge">Aciertos: <span id="score">0</span> / 30</div>
+    <button class="btn-reset" onclick="resetGame()">
+      🔄 Reiniciar Juego
+    </button>
+  </div>
+
+  <div class="drop-zones">
+    <div class="zone zone-eco" id="eco-zone" data-category="eco">
+      <h2>📊 Economía</h2>
+    </div>
+    <div class="zone zone-it" id="it-zone" data-category="it">
+      <h2>💻 Informática</h2>
+    </div>
+  </div>
+
+  <div class="items-container" id="items-pool"></div>
+  <div id="feedback"></div>
+
+  <script>
+    // Arreglo completo con URLs de imágenes de alta estabilidad
+    const itemsData = [
+      // --- ECONOMÍA (15 Elementos) ---
+      { id: 1, name: "Billetes / Divisas", cat: "eco", img: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=400&q=80" },
+      { id: 2, name: "Criptomoneda Bitcoin", cat: "eco", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80" },
+      { id: 3, name: "Tarjeta de Crédito", cat: "eco", img: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=400&q=80" },
+      { id: 4, name: "Lingotes de Oro", cat: "eco", img: "https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=400&q=80" },
+      { id: 5, name: "Bolsa de Valores", cat: "eco", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=400&q=80" },
+      { id: 6, name: "Alcancía / Ahorros", cat: "eco", img: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=400&q=80" },
+      { id: 7, name: "Factura Electrónica", cat: "eco", img: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=400&q=80" },
+      { id: 8, name: "Oferta y Demanda", cat: "eco", img: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=400&q=80" },
+      { id: 9, name: "Cheque Bancario", cat: "eco", img: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=400&q=80" },
+      { id: 10, name: "Tasa Fiscal / Impuestos", cat: "eco", img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=400&q=80" },
+      { id: 11, name: "Capital / Maquinaria", cat: "eco", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80" },
+      { id: 12, name: "Comercio / Envíos", cat: "eco", img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80" },
+      { id: 13, name: "Inflación / Precios", cat: "eco", img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=400&q=80" },
+      { id: 14, name: "Inversión / Startups", cat: "eco", img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80" },
+      { id: 15, name: "Contrato de Trabajo", cat: "eco", img: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=400&q=80" },
+
+      // --- INFORMÁTICA (15 Elementos) ---
+      { id: 16, name: "Memoria RAM", cat: "it", img: "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=400&q=80" },
+      { id: 17, name: "Tarjeta Gráfica GPU", cat: "it", img: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=400&q=80" },
+      { id: 18, name: "Procesador CPU", cat: "it", img: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=400&q=80" },
+      { id: 19, name: "Disco SSD NVMe", cat: "it", img: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=400&q=80" },
+      { id: 20, name: "Router Wi-Fi 6", cat: "it", img: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=400&q=80" },
+      { id: 21, name: "Servidor en Rack", cat: "it", img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=400&q=80" },
+      { id: 22, name: "Pendrive USB 3.0", cat: "it", img: "https://images.unsplash.com/photo-1618410320928-25228d811631?auto=format&fit=crop&w=400&q=80" },
+      { id: 23, name: "Placa Base / Motherboard", cat: "it", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80" },
+      { id: 24, name: "Teclado Mecánico RGB", cat: "it", img: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=400&q=80" },
+      { id: 25, name: "Monitor 4K Gamer", cat: "it", img: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=400&q=80" },
+      { id: 26, name: "Cable Fibra Óptica", cat: "it", img: "https://images.unsplash.com/photo-1551703599-6b3e8379aa8b?auto=format&fit=crop&w=400&q=80" },
+      { id: 27, name: "Inteligencia Artificial", cat: "it", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" },
+      { id: 28, name: "Base de Datos SQL", cat: "it", img: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=400&q=80" },
+      { id: 29, name: "Ciberseguridad / Firewall", cat: "it", img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=400&q=80" },
+      { id: 30, name: "Código / Algoritmo", cat: "it", img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=400&q=80" }
+    ];
+
+    let score = 0;
+    let selectedCard = null;
+    const pool = document.getElementById('items-pool');
+    const zones = document.querySelectorAll('.zone');
+    const feedback = document.getElementById('feedback');
+
+    function init() {
+      score = 0;
+      selectedCard = null;
+      document.getElementById('score').textContent = '0';
+      feedback.textContent = '';
+      pool.innerHTML = '';
+      
+      document.getElementById('eco-zone').innerHTML = '<h2>📊 Economía</h2>';
+      document.getElementById('it-zone').innerHTML = '<h2>💻 Informática</h2>';
+
+      // Mezclar elementos al azar
+      const shuffled = [...itemsData].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        card.draggable = true;
+        card.dataset.id = item.id;
+        card.dataset.cat = item.cat;
+        card.dataset.name = item.name;
+        
+        // Imagen con sistema de Respaldo (Fallback)
+        card.innerHTML = `<img src="${item.img}" alt="${item.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150x100/0047ba/ffffff?text=${encodeURIComponent(item.name)}'"><span>${item.name}</span>`;
+
+        // Eventos de arrastre
+        card.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', JSON.stringify(item));
+          deselectAll();
+        });
+
+        // Evento de clic/touch
+        card.addEventListener('click', () => {
+          if (card.classList.contains('placed')) return;
+          if (selectedCard === card) {
+            deselectAll();
+          } else {
+            deselectAll();
+            selectedCard = card;
+            card.classList.add('selected');
+            feedback.style.color = '#0047ba';
+            feedback.textContent = `Seleccionaste: "${item.name}". Ahora toca la categoría correspondiente arriba.`;
+          }
+        });
+
+        pool.appendChild(card);
+      });
+    }
+
+    function deselectAll() {
+      if (selectedCard) {
+        selectedCard.classList.remove('selected');
+        selectedCard = null;
+      }
+      feedback.textContent = '';
+    }
+
+    // Configurar Zonas de Caída
+    zones.forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const item = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const card = document.querySelector(`[data-id="${item.id}"]`);
+        validateAndMove(card, item.cat, zone);
+      });
+
+      zone.addEventListener('click', () => {
+        if (!selectedCard) return;
+        const cat = selectedCard.dataset.cat;
+        const card = selectedCard;
+        deselectAll();
+        validateAndMove(card, cat, zone);
+      });
+    });
+
+    function validateAndMove(card, itemCat, zone) {
+      const targetCat = zone.dataset.category;
+
+      if (itemCat === targetCat) {
+        // Respuesta Correcta
+        zone.appendChild(card);
+        card.draggable = false;
+        card.classList.add('placed');
+        score++;
+        document.getElementById('score').textContent = score;
+
+        feedback.style.color = '#10b981';
+        feedback.textContent = `¡Excelente! "${card.dataset.name}" pertenece a ${targetCat === 'eco' ? 'Economía' : 'Informática'}.`;
+
+        if (score === itemsData.length) {
+          setTimeout(() => {
+            alert('🎉 ¡Felicitaciones! Has clasificado correctamente los 30 elementos.');
+          }, 300);
+        }
+      } else {
+        // Respuesta Incorrecta
+        card.classList.add('shake');
+        feedback.style.color = '#ef4444';
+        feedback.textContent = `¡Atención! "${card.dataset.name}" no pertenece a esa categoría. Revisa el concepto e inténtalo nuevamente.`;
+        setTimeout(() => card.classList.remove('shake'), 400);
+      }
+    }
+
+    function resetGame() {
+      if (confirm('¿Deseas reiniciar el juego y volver a mezclar todas las tarjetas?')) {
+        init();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
