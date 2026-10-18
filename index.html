@@ -9,14 +9,13 @@
       --imm-blue: #0047ba;
       --imm-blue-dark: #003082;
       --imm-blue-light: #e8f0fe;
-      --imm-accent: #0066ff;
       --bg-color: #f1f5f9;
       --panel-bg: #ffffff;
       --card-bg: #ffffff;
       --eco-color: #0047ba;
-      --eco-bg: rgba(0, 71, 186, 0.06);
+      --eco-bg: rgba(0, 71, 186, 0.05);
       --it-color: #0284c7;
-      --it-bg: rgba(2, 132, 199, 0.06);
+      --it-bg: rgba(2, 132, 199, 0.05);
       --text-main: #0f172a;
       --text-muted: #475569;
       --border-color: #cbd5e1;
@@ -44,35 +43,34 @@
     /* Cabecera con Logo Institucional IMM */
     header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       background: var(--panel-bg);
-      padding: 20px 30px;
+      padding: 15px 25px;
       border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       border: 1px solid var(--border-color);
       width: 100%;
-      max-width: 1100px;
+      max-width: 1400px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .logo-container {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 15px;
     }
 
     .logo-imm {
-      height: 75px;
+      height: 65px;
       width: auto;
       object-fit: contain;
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       color: var(--imm-blue-dark);
       font-weight: 800;
       letter-spacing: -0.5px;
@@ -89,10 +87,10 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      max-width: 1100px;
+      max-width: 1400px;
       background: var(--panel-bg);
       border: 1px solid var(--border-color);
-      padding: 12px 24px;
+      padding: 10px 20px;
       border-radius: 12px;
       margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -113,16 +111,16 @@
       background: var(--imm-blue);
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 18px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 6px rgba(0, 71, 186, 0.3);
+      box-shadow: 0 2px 6px rgba(0, 71, 186, 0.25);
     }
 
     .btn-reset:hover {
@@ -130,24 +128,28 @@
       transform: translateY(-1px);
     }
 
-    /* Zonas de Soltar (Drop Zones) */
-    .drop-zones {
+    /* Estructura de 3 Columnas: Izquierda - Centro - Derecha */
+    .main-layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.2fr 1fr;
       gap: 20px;
       width: 100%;
-      max-width: 1100px;
-      margin-bottom: 20px;
+      max-width: 1400px;
+      align-items: start;
     }
 
-    @media (max-width: 768px) {
-      .drop-zones {
+    @media (max-width: 992px) {
+      .main-layout {
         grid-template-columns: 1fr;
+      }
+      .items-container {
+        order: -1; /* Mantiene tarjetas arriba en móviles */
       }
     }
 
+    /* Zonas de Soltar (Izquierda y Derecha) */
     .zone {
-      min-height: 300px;
+      min-height: 500px;
       background: var(--panel-bg);
       border: 2px dashed var(--border-color);
       border-radius: 16px;
@@ -157,7 +159,7 @@
       gap: 10px;
       align-content: flex-start;
       transition: all 0.25s ease;
-      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     }
 
     .zone h2 {
@@ -165,7 +167,7 @@
       font-size: 1.25rem;
       text-align: center;
       padding-bottom: 10px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
       border-bottom: 2px solid #e2e8f0;
       display: flex;
       align-items: center;
@@ -179,33 +181,49 @@
     .zone-eco.drag-over {
       border-color: var(--eco-color);
       background: var(--eco-bg);
-      box-shadow: 0 0 15px rgba(0, 71, 186, 0.15);
+      box-shadow: 0 0 18px rgba(0, 71, 186, 0.15);
     }
 
     .zone-it.drag-over {
       border-color: var(--it-color);
       background: var(--it-bg);
-      box-shadow: 0 0 15px rgba(2, 132, 199, 0.15);
+      box-shadow: 0 0 18px rgba(2, 132, 199, 0.15);
     }
 
-    /* Contenedor de Tarjetas */
+    /* Contenedor Central de Elementos */
     .items-container {
-      width: 100%;
-      max-width: 1100px;
       background: var(--panel-bg);
       border: 1px solid var(--border-color);
-      padding: 20px;
+      padding: 15px;
       border-radius: 16px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      min-height: 160px;
+      flex-direction: column;
+      align-items: center;
+      min-height: 500px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     }
 
+    .items-container h2 {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Tarjetas */
     .item-card {
-      width: 120px;
+      width: 110px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
@@ -231,7 +249,7 @@
 
     .item-card img {
       width: 100%;
-      height: 75px;
+      height: 70px;
       object-fit: cover;
       border-radius: 6px;
       margin-bottom: 6px;
@@ -240,7 +258,7 @@
     }
 
     .item-card span {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
       color: var(--text-main);
       display: block;
@@ -248,7 +266,7 @@
     }
 
     .item-card.placed {
-      width: 100px;
+      width: 95px;
       padding: 6px;
       cursor: default;
       transform: none !important;
@@ -257,11 +275,11 @@
     }
 
     .item-card.placed img {
-      height: 55px;
+      height: 50px;
     }
 
     .item-card.placed span {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
     }
 
     .shake {
@@ -277,11 +295,12 @@
     }
 
     #feedback {
-      margin-top: 15px;
+      margin-top: 20px;
       font-weight: 700;
       font-size: 1.05rem;
       min-height: 28px;
       text-align: center;
+      width: 100%;
     }
   </style>
 </head>
@@ -289,11 +308,10 @@
 
   <header>
     <div class="logo-container">
-      <!-- Logo del Instituto Marie Manoogian -->
       <img src="https://lh3.googleusercontent.com/d/1O53_Z5pLqZ5-rV8xZ4O5rN2bE_y7K_Z=" alt="Instituto Marie Manoogian" class="logo-imm" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x80/0047ba/ffffff?text=IMM+Marie+Manoogian'">
     </div>
     <h1>Instituto Marie Manoogian</h1>
-    <p class="desc">Clasificador Educativo: Arrastra o selecciona cada tarjeta en la categoría correcta</p>
+    <p class="desc">Arrastra cada elemento desde el centro hacia la izquierda (Economía) o hacia la derecha (Informática)</p>
   </header>
 
   <div class="controls-bar">
@@ -303,20 +321,27 @@
     </button>
   </div>
 
-  <div class="drop-zones">
+  <div class="main-layout">
+    <!-- IZQUIERDA: ECONOMÍA -->
     <div class="zone zone-eco" id="eco-zone" data-category="eco">
-      <h2>📊 Economía</h2>
+      <h2>⬅️ 📊 Economía</h2>
     </div>
+
+    <!-- CENTRO: ELEMENTOS POR CLASIFICAR -->
+    <div class="items-container">
+      <h2>🎯 Elementos por clasificar</h2>
+      <div class="cards-grid" id="items-pool"></div>
+    </div>
+
+    <!-- DERECHA: INFORMÁTICA -->
     <div class="zone zone-it" id="it-zone" data-category="it">
-      <h2>💻 Informática</h2>
+      <h2>💻 Informática ➡️</h2>
     </div>
   </div>
 
-  <div class="items-container" id="items-pool"></div>
   <div id="feedback"></div>
 
   <script>
-    // Arreglo completo con URLs de imágenes de alta estabilidad
     const itemsData = [
       // --- ECONOMÍA (15 Elementos) ---
       { id: 1, name: "Billetes / Divisas", cat: "eco", img: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=400&q=80" },
@@ -366,8 +391,8 @@
       feedback.textContent = '';
       pool.innerHTML = '';
       
-      document.getElementById('eco-zone').innerHTML = '<h2>📊 Economía</h2>';
-      document.getElementById('it-zone').innerHTML = '<h2>💻 Informática</h2>';
+      document.getElementById('eco-zone').innerHTML = '<h2>⬅️ 📊 Economía</h2>';
+      document.getElementById('it-zone').innerHTML = '<h2>💻 Informática ➡️</h2>';
 
       // Mezclar elementos al azar
       const shuffled = [...itemsData].sort(() => Math.random() - 0.5);
@@ -383,13 +408,13 @@
         // Imagen con sistema de Respaldo (Fallback)
         card.innerHTML = `<img src="${item.img}" alt="${item.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150x100/0047ba/ffffff?text=${encodeURIComponent(item.name)}'"><span>${item.name}</span>`;
 
-        // Eventos de arrastre
+        // Eventos Drag
         card.addEventListener('dragstart', (e) => {
           e.dataTransfer.setData('text/plain', JSON.stringify(item));
           deselectAll();
         });
 
-        // Evento de clic/touch
+        // Evento Click/Touch
         card.addEventListener('click', () => {
           if (card.classList.contains('placed')) return;
           if (selectedCard === card) {
@@ -399,7 +424,7 @@
             selectedCard = card;
             card.classList.add('selected');
             feedback.style.color = '#0047ba';
-            feedback.textContent = `Seleccionaste: "${item.name}". Ahora toca la categoría correspondiente arriba.`;
+            feedback.textContent = `Seleccionaste: "${item.name}". Toca la columna izquierda (Economía) o derecha (Informática).`;
           }
         });
 
@@ -445,7 +470,7 @@
       const targetCat = zone.dataset.category;
 
       if (itemCat === targetCat) {
-        // Respuesta Correcta
+        // Correcto
         zone.appendChild(card);
         card.draggable = false;
         card.classList.add('placed');
@@ -453,7 +478,7 @@
         document.getElementById('score').textContent = score;
 
         feedback.style.color = '#10b981';
-        feedback.textContent = `¡Excelente! "${card.dataset.name}" pertenece a ${targetCat === 'eco' ? 'Economía' : 'Informática'}.`;
+        feedback.textContent = `¡Correcto! "${card.dataset.name}" pertenece a ${targetCat === 'eco' ? 'Economía' : 'Informática'}.`;
 
         if (score === itemsData.length) {
           setTimeout(() => {
@@ -461,10 +486,10 @@
           }, 300);
         }
       } else {
-        // Respuesta Incorrecta
+        // Incorrecto
         card.classList.add('shake');
         feedback.style.color = '#ef4444';
-        feedback.textContent = `¡Atención! "${card.dataset.name}" no pertenece a esa categoría. Revisa el concepto e inténtalo nuevamente.`;
+        feedback.textContent = `¡Atención! "${card.dataset.name}" no pertenece a esa categoría. Inténtalo de nuevo.`;
         setTimeout(() => card.classList.remove('shake'), 400);
       }
     }
